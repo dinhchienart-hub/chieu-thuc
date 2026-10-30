@@ -1,0 +1,194 @@
+/**
+ * CSS cho Gói Bốn Hệ Thống Nâng Cấp (Offline Systems Pack)
+ * 1. Hộp thư
+ * 2. Kỳ Trân Các
+ * 3. Đồng Hành
+ * 4. Oản Tù Tì
+ */
+
+/* Nút Action Ribbon */
+.ribbon-btn.highlight-mail {
+  background: linear-gradient(180deg, #2b3a4a 0%, #151d28 100%) !important;
+  border-color: #74c0fc !important;
+  color: #a5d8ff !important;
+}
+
+.ribbon-btn.highlight-mail:hover {
+  background: linear-gradient(180deg, #364d63 0%, #1b2838 100%) !important;
+  border-color: #a5d8ff !important;
+  box-shadow: 0 0 10px rgba(116, 192, 252, 0.4) !important;
+}
+
+.ribbon-btn.highlight-rps {
+  background: linear-gradient(180deg, #44351d 0%, #20170b 100%) !important;
+  border-color: #ffd700 !important;
+  color: #ffe066 !important;
+}
+
+.ribbon-btn.highlight-rps:hover {
+  background: linear-gradient(180deg, #5c4625 0%, #2e200e 100%) !important;
+  border-color: #ffe066 !important;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.4) !important;
+}
+
+/* GIAO DIỆN HỘP THƯ */
+.mail-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: rgba(18, 24, 34, 0.85);
+  border: 1px solid rgba(200, 150, 90, 0.3);
+  border-radius: 6px;
+  padding: 10px 12px;
+  transition: all 0.2s ease;
+}
+
+.mail-item.unclaimed {
+  border-color: #ffd700;
+  background: rgba(28, 36, 50, 0.95);
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.15);
+}
+
+.mail-item.claimed {
+  opacity: 0.75;
+}
+
+.mail-preview {
+  font-size: 11px;
+  color: #ced4da;
+  line-height: 1.4;
+  margin: 4px 0 6px 0;
+}
+
+.mail-rewards-badge {
+  font-size: 11px;
+  background: rgba(10, 14, 20, 0.6);
+  border-radius: 4px;
+  padding: 4px 8px;
+  display: inline-block;
+}
+
+/* GIAO DIỆN OẢN TÙ TÌ */
+.rps-arena {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background: rgba(14, 18, 26, 0.85);
+  border: 1px solid rgba(200, 150, 90, 0.3);
+  border-radius: 8px;
+  padding: 16px 12px;
+  margin-bottom: 12px;
+}
+
+.rps-fighter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 150px;
+}
+
+.rps-avatar {
+  font-size: 38px;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));
+}
+
+.rps-choice-display {
+  font-size: 42px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.rps-vs {
+  font-size: 20px;
+  font-weight: bold;
+  color: #ff6b6b;
+  letter-spacing: 1px;
+  text-shadow: 0 0 6px rgba(255, 107, 107, 0.6);
+}
+
+.rps-result-text {
+  text-align: center;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 8px;
+  border-radius: 6px;
+  background: rgba(20, 26, 35, 0.6);
+  color: #ced4da;
+  margin-bottom: 8px;
+  min-height: 20px;
+}
+
+.rps-result-text.win {
+  color: #6fd46a;
+  background: rgba(43, 138, 62, 0.25);
+  border: 1px solid #51cf66;
+}
+
+.rps-result-text.draw {
+  color: #ffd700;
+  background: rgba(240, 140, 0, 0.2);
+  border: 1px solid #ffd700;
+}
+
+.rps-result-text.lose {
+  color: #ff8787;
+  background: rgba(201, 42, 42, 0.25);
+  border: 1px solid #ff6b6b;
+}
+
+.rps-bet-chip {
+  background: #18202a;
+  border: 1px solid #495057;
+  color: #ced4da;
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.rps-bet-chip:hover {
+  border-color: #ffd700;
+  color: #fff;
+}
+
+.rps-bet-chip.active {
+  background: #2b8a3e;
+  border-color: #51cf66;
+  color: #fff;
+  font-weight: bold;
+  box-shadow: 0 0 8px rgba(81, 207, 102, 0.35);
+}
+
+.rps-move-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: linear-gradient(180deg, #2b3648 0%, #171f2b 100%);
+  border: 2px solid #4dabf7;
+  border-radius: 8px;
+  padding: 10px 6px;
+  color: #fff;
+  font-weight: bold;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.rps-move-btn:hover {
+  background: linear-gradient(180deg, #384860 0%, #1e2a3b 100%);
+  border-color: #ffd700;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+}
+
+.rps-move-btn:active {
+  transform: translateY(1px);
+}
+

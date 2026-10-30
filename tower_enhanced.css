@@ -1,0 +1,125 @@
+/**
+ * CSS cho Hệ Thống Thông Thiên Tháp Nâng Cấp (Enhanced Tower of Babel)
+ */
+
+/* Nút Leo Tháp trên Action Ribbon */
+.ribbon-btn.highlight-tower {
+  background: linear-gradient(180deg, #3d2817 0%, #1c1108 100%) !important;
+  border-color: #f08c00 !important;
+  color: #ffd43b !important;
+  box-shadow: 0 0 8px rgba(240, 140, 0, 0.3) !important;
+}
+
+.ribbon-btn.highlight-tower:hover {
+  background: linear-gradient(180deg, #5c381c 0%, #2b1709 100%) !important;
+  border-color: #ffd43b !important;
+  box-shadow: 0 0 12px rgba(255, 212, 59, 0.5) !important;
+}
+
+/* Thanh HUD Thông Thiên Tháp trên sân đấu (#battle) */
+.tower-enhanced-hud {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 45;
+  pointer-events: auto;
+  user-select: none;
+}
+
+.tower-hud-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(14, 18, 26, 0.88);
+  backdrop-filter: blur(8px);
+  border: 1px solid #ffd700;
+  border-radius: 8px;
+  padding: 6px 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+  animation: towerHudGlow 3s infinite alternate;
+}
+
+@keyframes towerHudGlow {
+  0% { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6); }
+  100% { box-shadow: 0 4px 16px rgba(240, 140, 0, 0.35); }
+}
+
+.tower-hud-icon {
+  font-size: 24px;
+}
+
+.tower-hud-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.tower-hud-floor {
+  font-size: 13px;
+  font-weight: bold;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+
+.tower-hud-sub {
+  font-size: 10px;
+  color: #adb5bd;
+}
+
+.tower-hud-controls {
+  display: flex;
+  gap: 6px;
+  margin-left: 6px;
+}
+
+.tower-hud-btn {
+  background: #1c2430;
+  border: 1px solid #4dabf7;
+  color: #74c0fc;
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tower-hud-btn:hover {
+  background: #223249;
+  border-color: #ffd700;
+  color: #fff;
+}
+
+.tower-hud-btn.tower-btn-exit {
+  border-color: #ff6b6b;
+  color: #ff8787;
+}
+
+.tower-hud-btn.tower-btn-exit:hover {
+  background: #491212;
+  border-color: #ff8787;
+  color: #fff;
+}
+
+/* Thẻ Biome trong Modal */
+.tower-biome-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(18, 24, 34, 0.85);
+  border: 1px solid rgba(200, 150, 90, 0.25);
+  border-radius: 6px;
+  padding: 10px 12px;
+  transition: all 0.2s ease;
+}
+
+.tower-biome-card:hover {
+  border-color: #ffd700;
+  background: rgba(28, 36, 50, 0.95);
+}
+
+.tower-biome-card.active {
+  background: rgba(45, 30, 15, 0.85);
+  border-color: #ffd700;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+}
+

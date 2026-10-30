@@ -1,0 +1,1334 @@
+/* ==========================================================================
+   VÕ LÂM IDLE - GÓI NÂNG CẤP TÍNH NĂNG & GIAO DIỆN CHUẨN VÕ LÂM 1
+   Tham chiếu thiết kế: Võ Lâm Truyền Kỳ 1 (Kingsoft JX Online 1 / play.htz.vn)
+   ========================================================================== */
+
+/* ==========================================================================
+   GÓI 1: BÌNH CẦU SINH LỰC & NỘI LỰC CỔ ĐIỂN (CLASSIC DUAL ORB HUD)
+   ========================================================================== */
+
+#dualOrbContainer {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  z-index: 10;
+  pointer-events: auto;
+  user-select: none;
+  font-family: 'IBM Plex Mono', monospace, -apple-system, sans-serif;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#dualOrbContainer.orb-hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(12px) scale(0.9);
+}
+
+/* Khung viền hình cầu kim loại cổ phong */
+.orb-wrapper {
+  position: relative;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.15s ease, filter 0.2s ease;
+}
+
+.orb-wrapper:hover {
+  transform: scale(1.05);
+}
+
+.orb-wrapper:active {
+  transform: scale(0.95);
+}
+
+/* Vòng đai viền chạm khắc đồng / vàng */
+.orb-outer-ring {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  padding: 3px;
+  background: radial-gradient(circle at 30% 30%, #fef08a 0%, #ca8a04 40%, #713f12 75%, #291804 100%);
+  box-shadow: 
+    0 4px 10px rgba(0, 0, 0, 0.8),
+    inset 0 1px 2px rgba(255, 255, 255, 0.6),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.9);
+}
+
+/* Lòng cầu thủy tinh */
+.orb-glass {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #09090b;
+  overflow: hidden;
+  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.95);
+}
+
+/* Vùng chứa chất lỏng (sinh lực / nội lực) */
+.orb-liquid {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  transition: height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Thân chất lỏng */
+.orb-liquid-body {
+  width: 100%;
+  flex: 1;
+}
+
+/* Hiệu ứng gợn sóng nước SVG */
+.orb-wave {
+  width: 200%;
+  height: 12px;
+  margin-top: -11px;
+  flex-shrink: 0;
+  animation: waveMotion 2.2s linear infinite;
+}
+
+@keyframes waveMotion {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Bình Sinh Lực - Sắc Đỏ Huyết Kiếm Hiệp */
+.orb-hp .orb-liquid-body {
+  background: linear-gradient(180deg, #f43f5e 0%, #e11d48 20%, #be123c 60%, #881337 100%);
+}
+
+.orb-hp .orb-wave {
+  color: #f43f5e;
+}
+
+.orb-hp {
+  box-shadow: 0 0 14px rgba(225, 29, 72, 0.35);
+}
+
+/* Cảnh báo máu thấp (< 30%) */
+.orb-hp.orb-danger {
+  animation: hpPulseDanger 1s infinite alternate;
+}
+
+@keyframes hpPulseDanger {
+  0% {
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
+    filter: drop-shadow(0 0 4px #ef4444);
+  }
+  100% {
+    box-shadow: 0 0 24px rgba(239, 68, 68, 0.95), inset 0 0 15px rgba(239, 68, 68, 0.8);
+    filter: drop-shadow(0 0 10px #f87171);
+  }
+}
+
+/* Bình Nội Lực - Sắc Lam Khí Công */
+.orb-mp .orb-liquid-body {
+  background: linear-gradient(180deg, #38bdf8 0%, #0284c7 20%, #0369a1 60%, #0c4a6e 100%);
+}
+
+.orb-mp .orb-wave {
+  color: #38bdf8;
+}
+
+.orb-mp {
+  box-shadow: 0 0 14px rgba(2, 132, 199, 0.35);
+}
+
+/* Vệt sáng khúc xạ thủy tinh 3D (Specular Highlight) */
+.orb-specular {
+  position: absolute;
+  top: 4px;
+  left: 10px;
+  width: 30px;
+  height: 16px;
+  border-radius: 50% 50% 40% 40%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0.05) 100%);
+  transform: rotate(-25deg);
+  pointer-events: none;
+  filter: blur(0.5px);
+}
+
+.orb-inner-shadow {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.85);
+  pointer-events: none;
+}
+
+/* Thông số hiển thị bên trong quả cầu */
+.orb-info {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  pointer-events: none;
+  z-index: 5;
+  text-shadow: 0 1px 3px #000, 0 0 2px #000, 0 0 5px #000;
+}
+
+.orb-title {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  opacity: 0.9;
+  text-transform: uppercase;
+  color: #fef08a;
+  margin-bottom: -2px;
+}
+
+.orb-val {
+  font-size: 10px;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.1;
+}
+
+.orb-pct {
+  font-size: 8px;
+  font-weight: 700;
+  color: #fde047;
+  opacity: 0.85;
+}
+
+/* Nhãn phím tắt bên dưới */
+.orb-hotkey {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #18181b;
+  border: 1px solid #ca8a04;
+  color: #fef08a;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 0 4px;
+  border-radius: 3px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+  pointer-events: none;
+}
+
+/* Cụm điều khiển ở giữa 2 bình cầu */
+.orb-center-toggle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.orb-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: linear-gradient(180deg, #27272a 0%, #18181b 100%);
+  border: 1px solid #ca8a04;
+  border-radius: 12px;
+  color: #fef08a;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+  transition: all 0.2s ease;
+}
+
+.orb-toggle-btn:hover {
+  background: linear-gradient(180deg, #3f3f46 0%, #27272a 100%);
+  border-color: #facc15;
+  color: #ffffff;
+}
+
+.orb-toggle-icon {
+  font-size: 11px;
+}
+
+/* Nút chuyển chế độ trên thanh header / top control để người dùng bật lại khi cần */
+#headerOrbSwitch {
+  background: #27272a;
+  border: 1px solid #ca8a04;
+  border-radius: 4px;
+  color: #fef08a;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  cursor: pointer;
+  margin-left: 4px;
+}
+
+#headerOrbSwitch:hover {
+  border-color: #fef08a;
+  background: #3f3f46;
+}
+
+/* Responsive khi màn hình lớn (PC hoặc màn hình ngang) */
+@media (min-width: 600px) {
+  .orb-wrapper {
+    width: 76px;
+    height: 76px;
+  }
+  .orb-val {
+    font-size: 11px;
+  }
+  .orb-title {
+    font-size: 9px;
+  }
+}
+
+/* ==========================================================================
+   GÓI 2: PHÂN KÊNH NHẬT KÝ GIANG HỒ (MULTI-CHANNEL LOG & CHAT SYSTEM)
+   ========================================================================== */
+
+#logChannelBar {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 6px 0 8px 0;
+  padding: 6px 8px;
+  background: rgba(18, 18, 20, 0.95);
+  border: 1px solid #3f3f46;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  user-select: none;
+}
+
+.log-tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.log-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.log-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #27272a;
+  border: 1px solid #52525b;
+  border-radius: 4px;
+  color: #a1a1aa;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.log-tab-btn:hover {
+  background: #3f3f46;
+  color: #f4f4f5;
+  border-color: #71717a;
+}
+
+.log-tab-btn.active {
+  background: linear-gradient(180deg, #ca8a04 0%, #854d0e 100%);
+  border-color: #facc15;
+  color: #ffffff;
+  text-shadow: 0 1px 2px #000;
+  box-shadow: 0 2px 5px rgba(202, 138, 4, 0.4);
+}
+
+.lt-badge {
+  display: inline-block;
+  background: #18181b;
+  color: #e4e4e7;
+  font-size: 9px;
+  padding: 1px 4px;
+  border-radius: 8px;
+  min-width: 14px;
+  text-align: center;
+}
+
+.log-tab-btn.active .lt-badge {
+  background: #451a03;
+  color: #fef08a;
+  font-weight: 700;
+}
+
+.badge-loot {
+  color: #facc15;
+}
+
+.badge-combat {
+  color: #f87171;
+}
+
+.badge-system {
+  color: #60a5fa;
+}
+
+/* Thanh công cụ tìm kiếm và điều khiển cuộn */
+.log-tools {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.log-search-wrap {
+  position: relative;
+  flex: 1;
+}
+
+#logSearchInput {
+  width: 100%;
+  box-sizing: border-box;
+  background: #09090b;
+  border: 1px solid #3f3f46;
+  border-radius: 4px;
+  color: #f4f4f5;
+  font-size: 11px;
+  padding: 3px 22px 3px 6px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+#logSearchInput:focus {
+  border-color: #ca8a04;
+}
+
+.log-clear-btn {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #71717a;
+  font-size: 11px;
+  cursor: pointer;
+  padding: 0 2px;
+}
+
+.log-clear-btn:hover {
+  color: #f4f4f5;
+}
+
+.log-tool-btn {
+  background: #27272a;
+  border: 1px solid #52525b;
+  border-radius: 4px;
+  color: #d4d4d8;
+  font-size: 10px;
+  padding: 3px 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.log-tool-btn:hover {
+  background: #3f3f46;
+  border-color: #ca8a04;
+  color: #fef08a;
+}
+
+.log-tool-btn.on {
+  background: #14532d;
+  border-color: #22c55e;
+  color: #86efac;
+}
+
+/* Phân loại và tô điểm dòng log */
+#logBox div {
+  padding: 2px 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  transition: background 0.15s ease;
+  line-height: 1.4;
+}
+
+#logBox div:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Kênh Bảo Vật */
+#logBox div.log-item-loot {
+  color: #fde047;
+  border-left: 2px solid #eab308;
+  padding-left: 6px;
+}
+
+/* Đồ Hoàng Kim / Bạch Kim hiếm */
+#logBox div.log-item-rare {
+  background: linear-gradient(90deg, rgba(202, 138, 4, 0.25) 0%, transparent 100%) !important;
+  color: #fef08a !important;
+  font-weight: 700 !important;
+  border-left: 3px solid #facc15 !important;
+  text-shadow: 0 0 6px rgba(250, 204, 21, 0.6);
+  animation: rareLootGlow 2s ease infinite alternate;
+}
+
+@keyframes rareLootGlow {
+  0% { box-shadow: inset 0 0 4px rgba(234, 179, 8, 0.2); }
+  100% { box-shadow: inset 0 0 10px rgba(234, 179, 8, 0.5); }
+}
+
+/* Kênh Chiến Sự */
+#logBox div.log-item-combat {
+  color: #fca5a5;
+  border-left: 2px solid #ef4444;
+  padding-left: 6px;
+}
+
+#logBox div.log-item-boss {
+  background: linear-gradient(90deg, rgba(220, 38, 38, 0.25) 0%, transparent 100%) !important;
+  color: #fecaca !important;
+  font-weight: 700;
+  border-left: 3px solid #dc2626 !important;
+}
+
+/* Kênh Hệ Thống */
+#logBox div.log-item-system {
+  color: #93c5fd;
+  border-left: 2px solid #3b82f6;
+  padding-left: 6px;
+}
+
+/* Cơ chế lọc hiển thị của các Tab */
+#logBox.channel-loot div:not(.log-item-loot) {
+  display: none !important;
+}
+
+#logBox.channel-combat div:not(.log-item-combat) {
+  display: none !important;
+}
+
+#logBox.channel-system div:not(.log-item-system) {
+  display: none !important;
+}
+
+#logBox div.log-item-hidden {
+  display: none !important;
+}
+
+/* ==========================================================================
+   GÓI 3: TIỂU BẢN ĐỒ RADAR (ĐÃ GỠ BỎ HOÀN TOÀN THEO YÊU CẦU NGƯỜI DÙNG)
+   ========================================================================== */
+
+#miniMapHud,
+#mmCollapsedBtn {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+  border-radius: 4px;
+  color: #fef08a;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 6px;
+  cursor: pointer;
+  z-index: 8;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+#mmCollapsedBtn:hover {
+  background: #3f3f46;
+  border-color: #fef08a;
+}
+
+/* Tiêu đề radar */
+.minimap-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px 5px;
+  background: linear-gradient(180deg, #422006 0%, #1c1917 100%);
+  border-bottom: 1px solid #713f12;
+  font-size: 8px;
+}
+
+.minimap-stage-name {
+  color: #fef08a;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 60px;
+}
+
+.minimap-coords {
+  color: #a1a1aa;
+  font-size: 7.5px;
+}
+
+/* Thân radar chứa canvas & hiệu ứng quét */
+.minimap-body {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: radial-gradient(circle, #0c1a14 0%, #050a08 80%, #000 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-bottom: 1px solid #27272a;
+}
+
+#miniMapCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Hiệu ứng quét radar (Radar Sweep) */
+.mm-sweep {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, rgba(34, 197, 94, 0.25) 0deg, rgba(34, 197, 94, 0) 60deg, transparent 360deg);
+  pointer-events: none;
+  animation: radarSweep 3.5s linear infinite;
+  opacity: 0.6;
+}
+
+@keyframes radarSweep {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.mm-overlay-glare {
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.85);
+  pointer-events: none;
+}
+
+/* 4 Hướng Đông - Tây - Nam - Bắc */
+.mm-dir {
+  position: absolute;
+  font-size: 7px;
+  font-weight: 800;
+  color: rgba(254, 240, 138, 0.45);
+  pointer-events: none;
+  line-height: 1;
+}
+
+.mm-dir-n { top: 2px; left: 50%; transform: translateX(-50%); }
+.mm-dir-s { bottom: 2px; left: 50%; transform: translateX(-50%); }
+.mm-dir-w { left: 2px; top: 50%; transform: translateY(-50%); }
+.mm-dir-e { right: 2px; top: 50%; transform: translateY(-50%); }
+
+/* Chân radar */
+.minimap-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 4px;
+  background: #09090b;
+  font-size: 8px;
+}
+
+.mm-count {
+  color: #fca5a5;
+  font-weight: 600;
+}
+
+.mm-btn-toggle, .mm-btn-hide {
+  background: #27272a;
+  border: 1px solid #52525b;
+  color: #fef08a;
+  font-size: 8px;
+  font-weight: 700;
+  border-radius: 2px;
+  padding: 1px 4px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.mm-btn-toggle:hover, .mm-btn-hide:hover {
+  background: #3f3f46;
+  border-color: #ca8a04;
+}
+
+/* ==========================================================================
+   GÓI 4: GIAO DIỆN BẢNG NHÂN VẬT F3 CHUẨN CỔ ĐIỂN (CLASSIC F3 PANEL)
+   ========================================================================== */
+
+/* Khung toàn cảnh bảng F3 */
+#t-char .u2char {
+  background: radial-gradient(circle at 50% 20%, #27272a 0%, #18181b 60%, #09090b 100%) !important;
+  border: 1.5px solid #854d0e !important;
+  border-radius: 6px !important;
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.8),
+    inset 0 1px 2px rgba(254, 240, 138, 0.25) !important;
+  padding: 8px !important;
+  position: relative;
+}
+
+/* Biểu ngữ F3 Cổ Điển trên đầu */
+.f3-header-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: linear-gradient(90deg, transparent 0%, #451a03 30%, #78350f 50%, #451a03 70%, transparent 100%);
+  border-top: 1px solid #ca8a04;
+  border-bottom: 1px solid #ca8a04;
+  padding: 4px 0;
+  margin-bottom: 8px;
+  text-shadow: 0 1px 3px #000, 0 0 5px #000;
+  user-select: none;
+}
+
+.f3-banner-title {
+  color: #fef08a;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* Khung nhân vật đứng chính giữa (Altar/Pedestal) */
+#t-char .u2doll {
+  border: 1px solid #854d0e !important;
+  border-radius: 4px !important;
+  background: radial-gradient(circle at 50% 50%, #1c1917 0%, #0c0a09 75%, #000 100%) !important;
+  box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.95), 0 2px 8px rgba(0, 0, 0, 0.6) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Vòng sáng Bát Quái cổ phong sau lưng nhân vật */
+#t-char .u2doll::before {
+  content: "";
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px dashed rgba(202, 138, 4, 0.25);
+  box-shadow: 0 0 20px rgba(202, 138, 4, 0.1);
+  pointer-events: none;
+}
+
+/* 10 Ô trang bị bao quanh nhân vật */
+#t-char .u2s.slot {
+  border: 1px solid #713f12 !important;
+  background: rgba(12, 10, 9, 0.88) !important;
+  border-radius: 4px !important;
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.9), 0 1px 3px rgba(0, 0, 0, 0.6) !important;
+  transition: all 0.2s ease !important;
+}
+
+#t-char .u2s.slot:hover {
+  border-color: #facc15 !important;
+  box-shadow: 0 0 8px rgba(250, 204, 21, 0.5), inset 0 0 8px rgba(0, 0, 0, 0.8) !important;
+  transform: scale(1.02);
+  z-index: 5;
+}
+
+/* Khi có đồ đang mặc trong ô */
+#t-char .u2s.slot:has(.it) {
+  border-color: #ca8a04 !important;
+}
+
+/* 5 Dòng Kháng Ngũ Hành (Vật lý, Độc, Băng, Hỏa, Lôi) */
+#t-char .c2res {
+  gap: 5px !important;
+  margin-top: 6px !important;
+}
+
+#t-char .c2r {
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  background: rgba(9, 9, 11, 0.9) !important;
+  border-radius: 4px !important;
+  padding: 4px 2px !important;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+  transition: transform 0.15s ease;
+}
+
+#t-char .c2r:hover {
+  transform: translateY(-1px);
+}
+
+#t-char .c2r i {
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  margin-bottom: 2px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 2px !important;
+}
+
+#t-char .c2r b {
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  text-shadow: 0 1px 2px #000 !important;
+  z-index: 2;
+  position: relative;
+}
+
+/* Thanh tiến trình phần trăm kháng tính */
+.res-meter-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: var(--ec, #ca8a04);
+  box-shadow: 0 0 6px var(--ec, #ca8a04);
+  transition: width 0.3s ease;
+  z-index: 1;
+}
+
+/* Đạt mức kháng tối đa (75% trở lên) */
+#t-char .c2r.res-max {
+  border-color: #facc15 !important;
+  box-shadow: 0 0 6px rgba(250, 204, 21, 0.4), inset 0 0 6px rgba(0, 0, 0, 0.8) !important;
+}
+
+#t-char .c2r.res-max b {
+  color: #fef08a !important;
+}
+
+/* Cụm 4 Tiềm Năng (Sức mạnh, Thân pháp, Sinh khí, Nội công) */
+#t-char .u2a {
+  background: rgba(24, 24, 27, 0.6) !important;
+  border: 1px solid #27272a !important;
+  border-radius: 4px !important;
+  padding: 3px 6px !important;
+  margin-bottom: 3px !important;
+  transition: background 0.15s ease;
+}
+
+#t-char .u2a:hover {
+  background: rgba(39, 39, 42, 0.8) !important;
+  border-color: #3f3f46 !important;
+}
+
+#t-char .u2a span {
+  font-weight: 600;
+  color: #e4e4e7;
+  font-size: 11px;
+}
+
+#t-char .u2a b {
+  color: #fef08a;
+  font-weight: 700;
+}
+
+#t-char .u2a .plus {
+  background: linear-gradient(180deg, #ca8a04 0%, #854d0e 100%) !important;
+  border: 1px solid #facc15 !important;
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  border-radius: 3px !important;
+  cursor: pointer !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5) !important;
+  transition: transform 0.1s ease !important;
+}
+
+#t-char .u2a .plus:hover:not(:disabled) {
+  transform: scale(1.1);
+  filter: brightness(1.15);
+}
+
+#t-char .u2a .plus:disabled {
+  opacity: 0.3 !important;
+  cursor: not-allowed !important;
+}
+
+/* Điểm tiềm năng chưa cộng nhấp nháy thu hút chú ý */
+#bTTa.has-points-glow {
+  background: linear-gradient(180deg, #dc2626 0%, #991b1b 100%) !important;
+  border-color: #f87171 !important;
+  color: #ffffff !important;
+  animation: attrPointsPulse 1.2s infinite alternate !important;
+}
+
+@keyframes attrPointsPulse {
+  0% {
+    box-shadow: 0 0 4px #ef4444;
+  }
+  100% {
+    box-shadow: 0 0 14px #ef4444, inset 0 0 6px #ffffff;
+  }
+}
+
+/* ==========================================================================
+   TỐI ƯU GIAO DIỆN MÀN HÌNH DỌC ĐIỆN THOẠI (MOBILE PORTRAIT <= 600px)
+   ========================================================================== */
+#dualOrbContainer {
+  pointer-events: none !important; /* Không chặn chạm di chuyển trên sân đấu */
+}
+
+#dualOrbContainer .orb-wrapper,
+#dualOrbContainer .orb-center-toggle button {
+  pointer-events: auto !important;
+}
+
+.orb-close-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #27272a;
+  border: 1px solid #ca8a04;
+  color: #fef08a;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 3px;
+  transition: all 0.15s ease;
+}
+
+.orb-close-btn:hover,
+.orb-close-btn:active {
+  background: #dc2626;
+  border-color: #f87171;
+  color: #ffffff;
+}
+
+@media (max-width: 600px) {
+  /* Thu nhỏ và xếp gọn 2 bình cầu Máu/Mana phía trên thanh phím, không che sân đấu và pad */
+  #dualOrbContainer {
+    bottom: 50px !important;
+    left: 4px !important;
+    gap: 3px !important;
+    transform: scale(0.60) !important;
+    transform-origin: bottom left !important;
+    opacity: 0.82 !important;
+    z-index: 9 !important;
+  }
+
+  #dualOrbContainer:hover,
+  #dualOrbContainer:active {
+    opacity: 1 !important;
+  }
+
+  /* Khi người dùng nhấn nút thu nhỏ bình cầu */
+  #dualOrbContainer.orb-minimized {
+    transform: scale(0.45) !important;
+    opacity: 0.60 !important;
+  }
+
+  /* Radar đã gỡ bỏ hoàn toàn */
+  #miniMapHud,
+  #mmCollapsedBtn {
+    display: none !important;
+  }
+
+  /* Thanh 8 Tab chuyển đổi trên mobile: 1 hàng cuộn ngang mượt mà ngón tay cái */
+  #tabs {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    padding: 3px 6px !important;
+    gap: 4px !important;
+    background: #0b100e !important;
+    border-top: 1px solid #713f12 !important;
+  }
+
+  #tabs::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  #tabs button {
+    flex: 0 0 auto !important;
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    border-radius: 4px !important;
+    border: 1px solid #27272a !important;
+    background: #18181b !important;
+    color: #a1a1aa !important;
+    white-space: nowrap !important;
+    box-shadow: none !important;
+  }
+
+  #tabs button.on {
+    color: #fef08a !important;
+    border-color: #ca8a04 !important;
+    background: linear-gradient(180deg, #27272a 0%, #1c1917 100%) !important;
+    box-shadow: 0 0 6px rgba(202, 138, 4, 0.4) !important;
+  }
+
+  /* Thanh header đỉnh màn hình trên điện thoại */
+  #top {
+    padding: 2px 4px !important;
+    gap: 3px !important;
+    overflow-x: auto !important;
+    scrollbar-width: none !important;
+  }
+
+  #top::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  #top .gold {
+    font-size: 11px !important;
+    gap: 2px !important;
+    white-space: nowrap !important;
+  }
+
+  #headerOrbSwitch {
+    font-size: 10px !important;
+    padding: 2px 5px !important;
+    white-space: nowrap !important;
+  }
+
+  /* Bàn phím chiêu & bình thuốc cho ngón cái bấm chuẩn */
+  #pad {
+    bottom: 2px !important;
+    z-index: 7 !important;
+  }
+
+  #pad .pbtn {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  #pad .pbtn.mn {
+    width: 38px !important;
+    height: 38px !important;
+  }
+
+  /* Thanh phân kênh nhật ký trên mobile */
+  #logChannelBar {
+    padding: 4px !important;
+    margin: 4px 0 !important;
+  }
+  
+  .log-tab-btn {
+    font-size: 10px !important;
+    padding: 2px 6px !important;
+  }
+}
+
+/* ==========================================================================
+   TÍNH NĂNG TỰ MẶC ĐỒ & THAY ĐỒ TỐT HƠN (SMART AUTO EQUIP)
+   ========================================================================== */
+.smart-equip-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
+  background: linear-gradient(180deg, #27272a 0%, #18181b 100%);
+  border: 1px solid #854d0e;
+  border-radius: 6px;
+  padding: 6px 10px;
+  margin: 6px 0 8px 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+  user-select: none;
+}
+
+.btn-smart-equip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: linear-gradient(180deg, #eab308 0%, #ca8a04 50%, #854d0e 100%);
+  border: 1.5px solid #fef08a;
+  border-radius: 4px;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 5px 12px;
+  cursor: pointer;
+  text-shadow: 0 1px 2px #000;
+  box-shadow: 0 2px 8px rgba(234, 179, 8, 0.4);
+  transition: all 0.15s ease;
+}
+
+.btn-smart-equip:hover {
+  filter: brightness(1.15);
+  transform: translateY(-1px);
+}
+
+.btn-smart-equip:active {
+  transform: translateY(1px);
+}
+
+.auto-equip-toggle-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #fef08a;
+  font-size: 10.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.auto-equip-toggle-label input[type="checkbox"] {
+  accent-color: #eab308;
+  cursor: pointer;
+  width: 15px;
+  height: 15px;
+}
+
+/* ==========================================================================
+   GỢI Ý CỘNG TIỀM NĂNG: NHÁNH NGOẠI CÔNG & NHÁNH NỘI CÔNG
+   ========================================================================== */
+.f3-attr-suggest {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin: 8px 0 6px 0;
+  user-select: none;
+}
+
+.f3-suggest-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 5px 6px;
+  border-radius: 4px;
+  font-size: 10.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-shadow: 0 1px 2px #000;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+/* Nhánh Ngoại Công: Cam / Đỏ Kiếm Vương */
+.btn-phys-branch {
+  background: linear-gradient(180deg, #ea580c 0%, #c2410c 50%, #7c2d12 100%);
+  border: 1px solid #fb923c;
+  color: #ffedd5;
+}
+
+.btn-phys-branch:hover {
+  filter: brightness(1.15);
+  border-color: #fed7aa;
+}
+
+/* Nhánh Nội Công: Lam / Tím Pháp Khí */
+.btn-mag-branch {
+  background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 50%, #1e3a8a 100%);
+  border: 1px solid #60a5fa;
+  color: #eff6ff;
+}
+
+.btn-mag-branch:hover {
+  filter: brightness(1.15);
+  border-color: #bfdbfe;
+}
+
+/* ==========================================================================
+   GỢI Ý CỘNG KỸ NĂNG & PHÂN NHÁNH VÕ CÔNG (SKILLS BRANCH)
+   ========================================================================== */
+.skill-branch-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: rgba(18, 18, 20, 0.95);
+  border: 1px solid #52525b;
+  border-radius: 6px;
+  padding: 6px 8px;
+  margin-bottom: 8px;
+  user-select: none;
+}
+
+.sk-branch-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.sk-branch-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 5px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-shadow: 0 1px 2px #000;
+}
+
+.sk-btn-phys {
+  background: linear-gradient(180deg, #b45309 0%, #78350f 100%);
+  border: 1px solid #f59e0b;
+  color: #fef3c7;
+}
+
+.sk-btn-phys:hover {
+  filter: brightness(1.15);
+  border-color: #fde68a;
+}
+
+.sk-btn-mag {
+  background: linear-gradient(180deg, #0369a1 0%, #075985 100%);
+  border: 1px solid #38bdf8;
+  color: #e0f2fe;
+}
+
+.sk-btn-mag:hover {
+  filter: brightness(1.15);
+  border-color: #bae6fd;
+}
+
+/* Tab lọc nhánh hiển thị kỹ năng */
+.sk-filter-tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 5px;
+}
+
+.sk-filter-tab {
+  flex: 1;
+  background: #27272a;
+  border: 1px solid #3f3f46;
+  border-radius: 3px;
+  color: #a1a1aa;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 4px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s ease;
+}
+
+.sk-filter-tab:hover {
+  background: #3f3f46;
+  color: #f4f4f5;
+}
+
+.sk-filter-tab.active {
+  background: #ca8a04;
+  border-color: #fde047;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+/* Ẩn kỹ năng không khớp với tab lọc */
+#t-skill .u2k.sk-hidden,
+#t-skill .skl.sk-hidden {
+  display: none !important;
+}
+
+/* Thẻ nhãn Ngoại / Nội trên icon kỹ năng */
+.sk-badge-tag {
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  font-size: 8px;
+  font-weight: 800;
+  padding: 0 3px;
+  border-radius: 2px;
+  line-height: 11px;
+  pointer-events: none;
+  z-index: 5;
+  text-shadow: 0 1px 2px #000;
+}
+
+.sk-badge-phys {
+  background: rgba(194, 65, 12, 0.95);
+  border: 1px solid #fb923c;
+  color: #ffedd5;
+}
+
+.sk-badge-mag {
+  background: rgba(29, 78, 216, 0.95);
+  border: 1px solid #60a5fa;
+  color: #eff6ff;
+}
+
+/* Hiệu ứng nhấp nháy khi có trang bị tốt hơn trong túi */
+.btn-smart-equip.has-better-glow {
+  animation: smartEquipGlow 1.2s infinite alternate ease-in-out;
+  border-color: #fef08a !important;
+}
+
+@keyframes smartEquipGlow {
+  0% {
+    box-shadow: 0 0 4px rgba(234, 179, 8, 0.4);
+    transform: translateY(0);
+  }
+  100% {
+    box-shadow: 0 0 16px rgba(250, 204, 21, 0.95), 0 0 24px rgba(234, 179, 8, 0.6);
+    transform: translateY(-1px);
+    filter: brightness(1.2);
+  }
+}
+
+.eq-badge {
+  background: #dc2626;
+  color: #ffffff;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 1px 5px;
+  line-height: 1;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+}
+
+.eq-badge.hidden {
+  display: none !important;
+}
+
+/* Tinh chỉnh chiều cao và hiển thị trên màn hình dọc điện thoại */
+@media (max-width: 600px) {
+  .smart-equip-bar {
+    padding: 4px 6px;
+    margin: 4px 0 6px 0;
+  }
+  
+  .btn-smart-equip {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+  
+  .f3-attr-suggest {
+    margin: 4px 0;
+    gap: 4px;
+  }
+  
+  .f3-suggest-btn {
+    font-size: 10px;
+    padding: 5px 4px;
+  }
+
+  .skill-branch-bar {
+    padding: 4px 6px;
+    margin-bottom: 6px;
+  }
+
+  .sk-branch-btn {
+    font-size: 10px;
+    padding: 4px 6px;
+  }
+}
+
+
+
+

@@ -1,0 +1,936 @@
+/* ==========================================================================
+   VÕ LÂM IDLE - BỐ CỤC NÂNG CẤP HIỆN ĐẠI (MODERN GAMEPLAY LAYOUT)
+   Triết lý thiết kế:
+   1. The Theater: Giải phóng không gian sân đấu (Clean Arena Canvas)
+   2. Action Ribbon: Dải thao tác nhanh khiêu chiến & phúc lợi (Martial Ribbon)
+   3. Collapsible D-Pad: Thu gọn phím kỹ năng khi Auto, bung mở khi PK
+   4. F3 Character Sub-Tabs: Tích hợp Kinh Mạch, Linh Thú vào Tab Nhân Vật
+   5. Mobile Ergonomics: Tối ưu chuẩn ngón cái cho Header & Bottom Navigation
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. GIẢI PHÓNG KHÔNG GIAN SÂN ĐẤU (#battle)
+   Ẩn các widget trôi nổi cũ để sân đấu thoáng đãng 100%
+   -------------------------------------------------------------------------- */
+#htzQuickWidgetBar {
+  display: none !important; /* Đã chuyển toàn bộ tính năng vào Action Ribbon & F3 Sub-tabs */
+}
+
+/* Ẩn các nút inject dư thừa trên top bar cũ */
+#pkBossBtn,
+#htzHubBtn {
+  display: none !important; /* Đã đưa vào Action Ribbon */
+}
+
+/* --------------------------------------------------------------------------
+   2. ACTION RIBBON (DẢI CẦU NỐI THAO TÁC NHANH GIỮA BATTLE VÀ PANEL)
+   -------------------------------------------------------------------------- */
+#actionRibbon {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 5px;
+  padding: 5px 8px;
+  background: linear-gradient(180deg, #1b2520 0%, #0e1613 100%);
+  border-top: 1px solid #5a4a28;
+  border-bottom: 2px solid #2f3e36;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(230, 198, 122, 0.2);
+  z-index: 10;
+  flex: none;
+  user-select: none;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+#actionRibbon::-webkit-scrollbar {
+  display: none;
+}
+
+.ribbon-btn {
+  flex: 0 0 auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 32px;
+  padding: 4px 6px;
+  background: linear-gradient(180deg, #2a3731 0%, #17211d 100%);
+  border: 1px solid #4a5f54;
+  border-radius: 5px;
+  color: #eeddbb;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease-out;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.ribbon-btn:hover {
+  background: linear-gradient(180deg, #374a42 0%, #1e2c26 100%);
+  border-color: #d4af37;
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(212, 175, 55, 0.25);
+}
+
+.ribbon-btn:active {
+  transform: translateY(1px);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.ribbon-btn .ribbon-icon {
+  font-size: 13px;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.8));
+}
+
+.ribbon-btn .ribbon-txt {
+  letter-spacing: 0.2px;
+}
+
+/* Nút đặc biệt: Khiêu Chiến (Điểm nhấn Vàng Kim) */
+.ribbon-btn.highlight {
+  background: linear-gradient(180deg, #443719 0%, #201a09 100%);
+  border-color: #c9a23a;
+  color: #ffe68a;
+}
+.ribbon-btn.highlight:hover {
+  background: linear-gradient(180deg, #574620 0%, #2c240c 100%);
+  border-color: #ffd700;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.35);
+}
+
+/* Chấm đỏ thông báo trên Ribbon */
+.ribbon-dot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff3333;
+  box-shadow: 0 0 0 2px #0e1613, 0 0 6px #ff3333;
+  display: none;
+}
+.ribbon-dot.on {
+  display: block;
+  animation: pulseDot 1.2s infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.8; }
+}
+
+/* --------------------------------------------------------------------------
+   3. COLLAPSIBLE SMART D-PAD (THU GỌN / MỞ RỘNG BÀN PHÍM CHIÊU)
+   -------------------------------------------------------------------------- */
+/* Tối ưu thanh phím điều khiển #pad chuẩn JX1 (Không vỡ giao diện) */
+#pad {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 8 !important;
+  position: absolute !important;
+  bottom: 4px !important;
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  gap: 0 !important;
+  padding: 3px 4px !important;
+  background: linear-gradient(#24231f, #0d0d0c) !important;
+  border: 1px solid #000 !important;
+  box-shadow: 0 0 0 1px #6b6656, inset 0 1px 0 #45423a, 0 2px 8px #000 !important;
+  pointer-events: auto !important;
+  border-radius: 4px;
+}
+
+#pad .hb {
+  display: flex !important;
+  align-items: center !important;
+  gap: 2px !important;
+}
+
+#pad .hb + .hb {
+  margin-left: 5px !important;
+  padding-left: 5px !important;
+  border-left: 1px solid #000 !important;
+  box-shadow: -1px 0 0 #45423a !important;
+}
+
+/* Nút chuyển đổi trạng thái thu gọn D-Pad nổi tinh tế phía trên bên phải */
+.pad-toggle-btn {
+  position: absolute !important;
+  top: -24px !important;
+  right: 0 !important;
+  width: 24px !important;
+  height: 20px !important;
+  line-height: 18px !important;
+  border-radius: 4px !important;
+  background: rgba(20, 28, 24, 0.9) !important;
+  border: 1px solid #7d6b42 !important;
+  color: #ffd700 !important;
+  font-size: 11px !important;
+  text-align: center !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6) !important;
+  transition: all 0.2s ease !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.pad-toggle-btn:hover {
+  background: rgba(45, 60, 52, 0.95) !important;
+  border-color: #ffd700 !important;
+  color: #fff !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Khi D-Pad ở trạng thái thu gọn (Collapsed) */
+#pad.collapsed .hb:last-of-type {
+  display: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   4. BƯỚC 2: F3 CHARACTER SUB-TABS (TÍCH HỢP TRONG THẺ NHÂN VẬT)
+   -------------------------------------------------------------------------- */
+.char-sub-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 10px;
+  padding: 4px;
+  background: #0f1613;
+  border: 1px solid #3d4f45;
+  border-radius: 6px;
+}
+
+.char-sub-tab {
+  flex: 1;
+  padding: 6px 4px;
+  font-size: 11px;
+  color: #98a397;
+  background: #17211d;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.char-sub-tab:hover {
+  color: #eeddbb;
+  background: #23312b;
+}
+
+.char-sub-tab.active {
+  color: #ffd700;
+  background: linear-gradient(180deg, #32433a 0%, #1a2520 100%);
+  border-color: #a8864a;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  font-weight: 600;
+}
+
+/* Container nội dung bổ sung cho sub-tabs trong F3 */
+.char-sub-panel {
+  display: none;
+  animation: fadeInSub 0.2s ease-out;
+}
+.char-sub-panel.active {
+  display: block;
+}
+
+@keyframes fadeInSub {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Thẻ nâng cấp kinh mạch và linh thú tích hợp vào F3 */
+.f3-embedded-box {
+  background: #131b18;
+  border: 1px solid #3d4f45;
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+.f3-embedded-title {
+  color: #e6c67a;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #2c3b35;
+}
+
+/* --------------------------------------------------------------------------
+   5. BƯỚC 3: TỐI ƯU HEADER & BOTTOM NAVIGATION (MOBILE ERGONOMICS)
+   -------------------------------------------------------------------------- */
+#top {
+  padding: calc(6px + var(--safe-t)) 8px 6px !important;
+  gap: 6px !important;
+}
+
+/* Thu gọn hộp level và avatar */
+.lvbox {
+  width: 42px !important;
+  height: 42px !important;
+}
+
+/* Cụm tiền tệ Vàng + KNB trang nhã, có thể click mở Kỳ Trân Các */
+#top .gold {
+  cursor: pointer;
+  padding: 2px 6px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(168, 134, 74, 0.4);
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+#top .gold:hover {
+  background: rgba(40, 30, 15, 0.6);
+  border-color: #d4af37;
+}
+
+/* Nút KTC cũ trên header thu gọn lại */
+#ktcBtn {
+  font-size: 11px !important;
+  padding: 4px 8px !important;
+  height: 30px !important;
+  border: 1px solid #a8864a !important;
+  background: linear-gradient(180deg, #3a2e18 0%, #1e160a 100%) !important;
+  color: #ffd700 !important;
+  border-radius: 4px !important;
+}
+
+/* Nút tiện ích phụ trên Top Bar */
+#actBtn, #giftBtn, #compactBtn {
+  width: 30px !important;
+  height: 30px !important;
+  font-size: 14px !important;
+  line-height: 28px !important;
+  border-radius: 4px !important;
+  flex: none !important;
+}
+
+/* Tối ưu thanh điều hướng đáy #tabs */
+#tabs {
+  padding-bottom: calc(4px + var(--safe-b)) !important;
+  min-height: 52px !important;
+}
+
+#tabs button {
+  min-height: 46px !important;
+  font-size: 11px !important;
+  touch-action: manipulation !important;
+  transition: all 0.15s ease !important;
+}
+
+#tabs button:active {
+  transform: scale(0.95);
+}
+
+#tabs button.on {
+  color: #ffd700 !important;
+  text-shadow: 0 0 6px rgba(255, 215, 0, 0.5) !important;
+}
+
+}
+
+/* ==========================================================================
+   HỆ THỐNG ĐỒNG HÀNH & LINH THÚ HỢP NHẤT (UNIFIED COMPANIONS & SPIRIT BEASTS)
+   ========================================================================== */
+.comp-active-banner {
+  background: linear-gradient(135deg, #222d27 0%, #121916 100%);
+  border: 1px solid #c9a23a;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 215, 0, 0.2);
+}
+
+.comp-header-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.comp-avatar-large {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #3d4f45 0%, #141d19 100%);
+  border: 2px solid #ffd700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  box-shadow: 0 0 12px rgba(255, 215, 0, 0.35);
+  flex: none;
+}
+
+.comp-title-block {
+  flex: 1;
+  min-width: 0;
+}
+
+.comp-name-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.comp-name-txt {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffd700;
+  letter-spacing: 0.3px;
+}
+
+.comp-badge-type {
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: #37463f;
+  color: #a4dfc8;
+}
+
+.comp-badge-series {
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-weight: 600;
+}
+.comp-badge-series.s-kim { background: #57461d; color: #ffd700; border: 1px solid #a8864a; }
+.comp-badge-series.s-moc { background: #1f4229; color: #7fe37a; border: 1px solid #3c7d4e; }
+.comp-badge-series.s-thuy { background: #1a3952; color: #7fe3ff; border: 1px solid #2f64b8; }
+.comp-badge-series.s-hoa { background: #52241b; color: #ff8c7a; border: 1px solid #a83d2a; }
+.comp-badge-series.s-tho { background: #4a3e21; color: #e6c67a; border: 1px solid #8f793b; }
+
+.comp-role-line {
+  font-size: 11px;
+  color: #98a397;
+  margin-top: 3px;
+}
+
+.comp-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid #2f3e36;
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+}
+
+.comp-stat-item {
+  font-size: 11px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.comp-stat-item span { color: #8da49a; }
+.comp-stat-item b { color: #eeddbb; font-weight: 600; }
+
+.comp-aura-box {
+  background: rgba(20, 26, 23, 0.6);
+  border-left: 3px solid #ffd700;
+  padding: 6px 8px;
+  font-size: 11px;
+  color: #cedad4;
+  margin-bottom: 10px;
+  border-radius: 0 4px 4px 0;
+  line-height: 1.4;
+}
+
+.comp-actions-row {
+  display: flex;
+  gap: 8px;
+}
+.comp-actions-row .btn {
+  flex: 1;
+  padding: 7px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Bộ lọc đồng hành */
+.comp-filter-bar {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.comp-filter-btn {
+  flex: 1;
+  padding: 5px 8px;
+  font-size: 11px;
+  background: #141c19;
+  border: 1px solid #36483f;
+  color: #98a397;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: center;
+}
+.comp-filter-btn:hover {
+  background: #23312b;
+  color: #e9e2d0;
+}
+.comp-filter-btn.active {
+  background: linear-gradient(180deg, #374a41 0%, #1e2a24 100%);
+  border-color: #ffd700;
+  color: #ffd700;
+  font-weight: 600;
+}
+
+/* Lưới danh sách đồng hành */
+.comp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.comp-card {
+  background: #151e1a;
+  border: 1px solid #36483f;
+  border-radius: 6px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+.comp-card:hover {
+  border-color: #7d6b42;
+  background: #1b2621;
+}
+.comp-card.active-comp {
+  border-color: #ffd700;
+  background: linear-gradient(180deg, #24312a 0%, #151e1a 100%);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+}
+
+.comp-card-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.comp-card-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #0f1613;
+  border: 1px solid #7d6b42;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex: none;
+}
+
+.comp-card-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #eeddbb;
+}
+
+.comp-card-desc {
+  font-size: 11px;
+  color: #8da49a;
+  line-height: 1.35;
+}
+
+.comp-card-btn {
+  padding: 5px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 4px;
+  border: 1px solid #4a5f55;
+  background: #24332c;
+  color: #e9e2d0;
+  cursor: pointer;
+  text-align: center;
+  width: 100%;
+  transition: all 0.15s ease;
+}
+.comp-card-btn:hover {
+  background: #374e43;
+  border-color: #ffd700;
+  color: #fff;
+}
+.comp-card-btn.active {
+  background: linear-gradient(180deg, #443719 0%, #201a09 100%);
+  border-color: #ffd700;
+  color: #ffd700;
+}
+
+
+/* ==========================================================================
+ * BỔ SUNG: NÚT TỐC ĐỘ, LƯU TRỮ VÀ MODAL SAO LƯU DỰ PHÒNG 1-CLICK
+ * ========================================================================== */
+
+.ribbon-btn.highlight-speed {
+  background: linear-gradient(180deg, #1b384f 0%, #0d2030 100%);
+  border-color: #38bdf8;
+  color: #bae6fd;
+}
+.ribbon-btn.highlight-speed:hover {
+  background: linear-gradient(180deg, #234968 0%, #122c42 100%);
+  border-color: #7dd3fc;
+  box-shadow: 0 3px 8px rgba(56, 189, 248, 0.35);
+}
+.ribbon-btn.highlight-speed.active-speed {
+  background: linear-gradient(180deg, #0284c7 0%, #0369a1 100%);
+  border-color: #e0f2fe;
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+}
+
+.ribbon-btn.highlight-save {
+  background: linear-gradient(180deg, #3b2d54 0%, #201733 100%);
+  border-color: #a855f7;
+  color: #f3e8ff;
+}
+.ribbon-btn.highlight-save:hover {
+  background: linear-gradient(180deg, #4c3a6d 0%, #291e42 100%);
+  border-color: #c084fc;
+  box-shadow: 0 3px 8px rgba(168, 85, 247, 0.35);
+}
+
+/* Save Manager Modal */
+.save-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+}
+.save-modal-overlay.hidden {
+  display: none !important;
+}
+
+.save-modal-box {
+  background: linear-gradient(180deg, #18221d 0%, #0c120f 100%);
+  border: 1px solid #7d6b42;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 580px;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(212, 175, 55, 0.2);
+  overflow: hidden;
+  color: #eeddbb;
+  font-family: inherit;
+}
+
+.save-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: linear-gradient(90deg, #2b3930 0%, #1a251f 100%);
+  border-bottom: 1px solid #4a5f54;
+}
+
+.save-modal-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffd700;
+  letter-spacing: 0.5px;
+}
+
+.save-modal-close {
+  background: transparent;
+  border: none;
+  color: #adb5bd;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+.save-modal-close:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+.save-modal-body {
+  padding: 14px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.save-section {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid #2a3a32;
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+
+.save-sec-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffd700;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.save-sec-desc {
+  font-size: 11px;
+  color: #8da49a;
+  line-height: 1.4;
+  margin: 0 0 8px 0;
+}
+
+.save-action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.save-action-row .btn {
+  flex: 1;
+  min-width: 140px;
+  padding: 7px 10px;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.snap-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 160px;
+  overflow-y: auto;
+}
+
+.snap-empty {
+  font-size: 11.5px;
+  color: #6b8277;
+  font-style: italic;
+  padding: 8px 4px;
+  text-align: center;
+}
+
+.snap-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #141c18;
+  border: 1px solid #28372e;
+  border-radius: 4px;
+  padding: 6px 10px;
+  gap: 10px;
+}
+
+.snap-name {
+  font-size: 11.5px;
+  color: #ffd700;
+}
+
+.snap-meta {
+  font-size: 10.5px;
+  color: #7e958a;
+  margin-top: 1px;
+}
+
+.save-toggle-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 0;
+}
+
+.save-toggle-item label {
+  font-size: 11.5px;
+  color: #d1ded8;
+  line-height: 1.35;
+  cursor: pointer;
+}
+
+.save-toggle-item label b {
+  color: #e5f3ed;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.save-toggle-item label span {
+  font-size: 10.5px;
+  color: #839d91;
+  display: block;
+}
+
+.save-toggle-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #ffd700;
+  cursor: pointer;
+}
+
+.gift-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 8px;
+}
+
+.gift-card {
+  background: #141c18;
+  border: 1px solid #28372e;
+  border-radius: 5px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.gift-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.gift-code {
+  font-family: monospace;
+  font-weight: 700;
+  color: #ffd700;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}
+
+.gift-status.used {
+  color: #6b8277;
+  font-size: 10px;
+}
+.gift-status.ready {
+  color: #5fd35a;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.gift-desc {
+  font-size: 10.5px;
+  color: #8da49a;
+  line-height: 1.3;
+}
+
+/* ==========================================================================
+   NÚT KHINH CÔNG (DODGE / DASH) TRÊN BÀN PHÍM PAD - CHUẨN Ô JX1 (34x34px)
+   ========================================================================== */
+#pad .pbtn.khinh-cong {
+  width: 34px !important;
+  height: 34px !important;
+  flex: 0 0 34px !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  border: 1px solid #3d6a77 !important;
+  background: url(img/icon/khinh-cong.webp) center 2px / 20px 20px no-repeat, radial-gradient(circle at 45% 30%, #1c333a, #071317) !important;
+  box-shadow: inset 0 0 0 1px #000 !important;
+  position: relative !important;
+  display: block !important;
+  overflow: hidden !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  touch-action: manipulation !important;
+  color: #e5f6ff !important;
+}
+
+#pad .pbtn.khinh-cong:hover {
+  border-color: #8be5ff !important;
+  box-shadow: 0 0 6px rgba(123, 198, 217, 0.6), inset 0 0 0 1px #000 !important;
+}
+
+#pad .pbtn.khinh-cong:active,
+#pad .pbtn.khinh-cong.jumping {
+  filter: brightness(1.3) !important;
+}
+
+#pad .pbtn.khinh-cong .charges {
+  position: absolute !important;
+  top: 1px !important;
+  left: 0 !important;
+  right: 0 !important;
+  text-align: center !important;
+  color: #7ce3ff !important;
+  font-size: 7.5px !important;
+  letter-spacing: 0.5px !important;
+  z-index: 3 !important;
+  pointer-events: none !important;
+  line-height: 1 !important;
+  text-shadow: 0 1px 2px #000 !important;
+}
+
+#pad .pbtn.khinh-cong span {
+  position: absolute !important;
+  bottom: 8px !important;
+  left: 0 !important;
+  right: 0 !important;
+  text-align: center !important;
+  font-size: 6.5px !important;
+  font-weight: 700 !important;
+  color: #e5f6ff !important;
+  z-index: 2 !important;
+  pointer-events: none !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  text-shadow: 0 1px 2px #000 !important;
+}
+
+#pad .pbtn.khinh-cong .timer {
+  position: absolute !important;
+  bottom: 1px !important;
+  left: 0 !important;
+  right: 0 !important;
+  text-align: center !important;
+  font-size: 6.5px !important;
+  color: #ffd700 !important;
+  z-index: 2 !important;
+  pointer-events: none !important;
+  line-height: 1 !important;
+  text-shadow: 0 1px 2px #000 !important;
+}
+
+#pad .pbtn.khinh-cong .cd {
+  position: absolute !important;
+  inset: 0 !important;
+  background: conic-gradient(rgba(0, 0, 0, 0.75) var(--p, 0%), transparent 0) !important;
+  z-index: 1 !important;
+  pointer-events: none !important;
+}
+
+#pad .pbtn.khinh-cong.recharging {
+  filter: grayscale(0.5);
+  border-color: #33444a !important;
+}
+  filter: grayscale(0.5);
+  border-color: #446;
+}

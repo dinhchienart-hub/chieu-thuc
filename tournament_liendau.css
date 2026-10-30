@@ -1,0 +1,498 @@
+/* ==========================================================================
+   VÕ LÂM IDLE - GIAO DIỆN ĐẠI HỘI VÕ LÂM LIÊN ĐẤU 64 ĐẤU THỦ (TOURNAMENT CSS)
+   ========================================================================== */
+
+.ld-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(5px);
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+.ld-modal-box {
+  width: 100%;
+  max-width: 960px;
+  max-height: 92vh;
+  background: radial-gradient(circle at 50% 10%, #1c2621 0%, #0d1411 100%);
+  border: 2px solid #ca8a04;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9), 0 0 20px rgba(202, 138, 4, 0.35);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  color: #f1f5f9;
+  font-family: inherit;
+}
+
+/* Header */
+.ld-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  background: linear-gradient(180deg, #27382f 0%, #141f1a 100%);
+  border-bottom: 1px solid #713f12;
+}
+
+.ld-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ld-logo-badge {
+  font-size: 28px;
+  filter: drop-shadow(0 0 8px #facc15);
+}
+
+.ld-title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 800;
+  color: #fde047;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.ld-sub {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.ld-btn-close {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid #ef4444;
+  color: #fca5a5;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ld-btn-close:hover {
+  background: #ef4444;
+  color: #fff;
+}
+
+/* Tabs Bar */
+.ld-tabs-bar {
+  display: flex;
+  background: #0f1713;
+  padding: 6px 12px;
+  gap: 6px;
+  border-bottom: 1px solid #293830;
+  overflow-x: auto;
+}
+
+.ld-tab-btn {
+  padding: 7px 14px;
+  background: rgba(30, 41, 35, 0.6);
+  border: 1px solid #334155;
+  color: #94a3b8;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.ld-tab-btn:hover {
+  background: #1e2923;
+  color: #f8fafc;
+}
+
+.ld-tab-btn.active {
+  background: linear-gradient(180deg, #ca8a04 0%, #854d0e 100%);
+  border-color: #facc15;
+  color: #0f172a;
+  font-weight: 800;
+  box-shadow: 0 0 10px rgba(250, 204, 21, 0.4);
+}
+
+.ld-tab-btn.highlight {
+  border-color: #eab308;
+  animation: ldPulseTab 2s infinite;
+}
+
+@keyframes ldPulseTab {
+  0%, 100% { box-shadow: 0 0 4px #eab308; }
+  50% { box-shadow: 0 0 12px #eab308; }
+}
+
+/* Status Banner */
+.ld-status-banner {
+  padding: 8px 16px;
+  background: #131c17;
+  border-bottom: 1px solid #202e26;
+  font-size: 12px;
+}
+
+.ld-banner-fight {
+  color: #fbbf24;
+}
+
+.ld-banner-champ {
+  color: #4ade80;
+}
+
+.ld-champ-name {
+  color: #facc15;
+  font-weight: 800;
+}
+
+.ld-banner-elim {
+  color: #f87171;
+}
+
+/* Matches Grid */
+.ld-matches-grid {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 10px;
+}
+
+.ld-match-card {
+  background: rgba(18, 26, 21, 0.95);
+  border: 1px solid #334a3e;
+  border-radius: 8px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  position: relative;
+  transition: all 0.2s;
+}
+
+.ld-match-card:hover {
+  border-color: #64748b;
+}
+
+.ld-match-card.player-card {
+  border: 1.5px solid #eab308;
+  background: linear-gradient(180deg, rgba(30, 42, 33, 0.95) 0%, rgba(20, 28, 23, 0.95) 100%);
+  box-shadow: 0 0 12px rgba(234, 179, 8, 0.35);
+}
+
+.ld-match-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #25332b;
+  padding-bottom: 4px;
+}
+
+.ld-match-num {
+  font-size: 10px;
+  color: #64748b;
+  font-weight: 700;
+}
+
+.ld-player-badge {
+  background: #eab308;
+  color: #0f172a;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 3px;
+  letter-spacing: 0.5px;
+}
+
+.ld-status-tag {
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+
+.ld-status-tag.done {
+  background: #1e293b;
+  color: #94a3b8;
+}
+
+.ld-status-tag.pending {
+  background: #3b2812;
+  color: #fde047;
+}
+
+/* Fighter Row */
+.ld-fighter-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 6px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.ld-fighter-row.winner {
+  background: rgba(34, 197, 94, 0.15);
+  border-left: 3px solid #22c55e;
+}
+
+.ld-fighter-row.loser {
+  opacity: 0.55;
+  filter: grayscale(0.5);
+}
+
+.ld-fighter-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+}
+
+.ld-fighter-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: #e2e8f0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ld-fighter-name.highlight-player {
+  color: #fde047;
+  text-shadow: 0 0 6px rgba(250, 204, 21, 0.5);
+}
+
+.ld-fighter-sect {
+  font-size: 10px;
+  color: #94a3b8;
+  white-space: nowrap;
+}
+
+.ld-fighter-score {
+  font-size: 13px;
+  font-weight: 800;
+  color: #f8fafc;
+  min-width: 14px;
+  text-align: right;
+}
+
+.ld-match-vs {
+  text-align: center;
+  font-size: 9px;
+  font-weight: 800;
+  color: #475569;
+  letter-spacing: 1px;
+  margin: -2px 0;
+}
+
+/* Series Badges */
+.ld-series-badge {
+  font-size: 9px;
+  font-weight: 800;
+  padding: 1px 4px;
+  border-radius: 3px;
+  flex: none;
+}
+
+.series-kim { background: #ca8a04; color: #000; }
+.series-moc { background: #16a34a; color: #fff; }
+.series-thuy { background: #0284c7; color: #fff; }
+.series-hoa { background: #dc2626; color: #fff; }
+.series-tho { background: #78350f; color: #fed7aa; }
+
+/* Match Actions */
+.ld-match-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.ld-btn-duel {
+  flex: 1;
+  padding: 6px;
+  background: linear-gradient(180deg, #e11d48 0%, #9f1239 100%);
+  border: 1px solid #fda4af;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.ld-btn-duel:hover {
+  filter: brightness(1.15);
+  box-shadow: 0 0 8px rgba(244, 63, 94, 0.6);
+}
+
+.ld-btn-quick {
+  flex: 1;
+  padding: 6px;
+  background: linear-gradient(180deg, #d97706 0%, #92400e 100%);
+  border: 1px solid #fde68a;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.ld-btn-quick:hover {
+  filter: brightness(1.15);
+  box-shadow: 0 0 8px rgba(217, 119, 6, 0.6);
+}
+
+/* Footer */
+.ld-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  background: #111a15;
+  border-top: 1px solid #202e26;
+  font-size: 11px;
+}
+
+.ld-footer-info {
+  display: flex;
+  gap: 10px;
+}
+
+.ld-dot-kim { color: #facc15; }
+.ld-dot-moc { color: #4ade80; }
+.ld-dot-thuy { color: #38bdf8; }
+.ld-dot-hoa { color: #f87171; }
+.ld-dot-tho { color: #fb923c; }
+
+.ld-btn-action {
+  padding: 7px 14px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+}
+
+.ld-btn-action.auto {
+  background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%);
+  color: #fff;
+  border-color: #93c5fd;
+}
+
+.ld-btn-action.reset {
+  background: linear-gradient(180deg, #eab308 0%, #a16207 100%);
+  color: #0f172a;
+  font-weight: 800;
+  border-color: #fef08a;
+}
+
+/* Champion Victory Modal */
+.ld-champion-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.90);
+  backdrop-filter: blur(8px);
+  z-index: 100001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.ld-champion-card {
+  width: 100%;
+  max-width: 520px;
+  background: radial-gradient(circle at 50% 20%, #2e2614 0%, #11100b 100%);
+  border: 2px solid #facc15;
+  border-radius: 14px;
+  padding: 24px;
+  text-align: center;
+  box-shadow: 0 0 50px rgba(250, 204, 21, 0.45), 0 20px 40px rgba(0, 0, 0, 0.9);
+  animation: ldCardPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes ldCardPop {
+  0% { transform: scale(0.85); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.ld-crown-glow {
+  font-size: 52px;
+  margin-bottom: 8px;
+  filter: drop-shadow(0 0 16px #facc15);
+  animation: ldCrownFloat 2s ease-in-out infinite;
+}
+
+@keyframes ldCrownFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.ld-champion-title {
+  margin: 0 0 4px;
+  font-size: 22px;
+  font-weight: 900;
+  color: #facc15;
+  letter-spacing: 1px;
+  text-shadow: 0 0 12px rgba(250, 204, 21, 0.6);
+}
+
+.ld-champion-sub {
+  font-size: 12px;
+  color: #cbd5e1;
+  margin: 0 0 16px;
+}
+
+.ld-rewards-box {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid #713f12;
+  border-radius: 8px;
+  padding: 12px 14px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+  font-size: 12px;
+}
+
+.ld-reward-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #f1f5f9;
+}
+
+.ld-r-icon {
+  font-size: 15px;
+  flex: none;
+}
+
+.ld-btn-claim {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(180deg, #facc15 0%, #ca8a04 100%);
+  border: 1px solid #fef08a;
+  border-radius: 8px;
+  color: #0f172a;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 14px rgba(250, 204, 21, 0.4);
+  transition: all 0.2s;
+}
+
+.ld-btn-claim:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
